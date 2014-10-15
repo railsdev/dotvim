@@ -31,6 +31,7 @@ NeoBundle 'hynek/vim-python-pep8-indent'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mattn/emmet-vim'
+NeoBundle 'tpope/vim-rails'
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
 NeoBundle 'nacitar/a.vim'
 NeoBundle 'othree/html5.vim'
@@ -54,6 +55,8 @@ NeoBundle 'vim-scripts/genutils'
 NeoBundle 'vim-scripts/ini-syntax-definition'
 NeoBundle 'vim-scripts/matchit.zip'
 NeoBundle 'vim-scripts/taglist.vim'
+NeoBundle 'vim-scripts/vcscommand.vim'
+NeoBundle 'tpope/vim-endwise'
 
 " Original mirrors
 NeoBundle 'voithos/vim-multiselect'
@@ -148,8 +151,8 @@ set backspace=eol,start,indent
 syntax enable
 
 " Set the tab stop to the given value and enable tab-to-space expansion
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 
 " Make sure that <BS> deletes a "shiftwidth" worth of spaces
@@ -171,14 +174,19 @@ if has("gui_running")
     set guioptions-=T
 
     " Set theme options
-    colorscheme badwolf
+
+    colorscheme distinguished  
     set background=dark
 
+    set guioptions-=m  "remove menu bar
+    set guioptions-=T  "remove toolbar
+    set guioptions-=r  "remove right-hand scroll bar
     " Set font
     if has("win32")
         set guifont=Consolas:h10:b:cANSI
     else
-        set guifont=Source\ Code\ Pro\ For\ Powerline\ 10
+        set guifont=Source\ Code\ Pro\ For\ Powerline\ 11
+        " set guifont=Ubuntu\ Mono\ 12
     endif
 else
     " Enable more colors for the terminal
@@ -196,8 +204,10 @@ set wildmenu
 set title
 
 " Keep the screen neat by not wrapping long lines
-set nowrap
+" set nowrap
 
+set wrap " wrap lines, we dont want long lines
+set showbreak=↪ " character show when wrapping line
 " Set whitespace characters to use when using list
 set listchars=eol:¬,tab:»\ ,trail:·
 
@@ -205,7 +215,7 @@ set listchars=eol:¬,tab:»\ ,trail:·
 set list
 
 " Enable an warning when exceeding a certain line length
-set colorcolumn=80
+set colorcolumn=120
 
 " Enable line numbers
 set number
@@ -312,20 +322,54 @@ function! BufWipe()
 endfunction
 
 " Map buffer navigation easier
-nnoremap <silent> <leader>j :call BufNext()<CR>
-nnoremap <silent> <leader>k :call BufPrev()<CR>
+nnoremap <silent> <M-Right> :call BufNext()<cr>
+nnoremap <silent> <M-Left> :call BufPrev()<cr>
+
 
 " Map easier shortcuts to common plugins
 nnoremap <silent> <leader>t :NERDTreeToggle<CR>
 nnoremap <silent> <leader>q :call BufWipe()<CR> " Close buffer without closing window
-nnoremap <silent> <leader>g :GundoToggle<CR>
+nnoremap <silent> <leader>gu :GundoToggle<CR>
 nnoremap <silent> <leader>e :TagbarToggle<CR>
 
 " Map timestamp functions
-nnoremap <F4> a<C-R>=strftime("%m/%d/%y")<CR><ESC>
-inoremap <F4> <C-R>=strftime("%m/%d/%y")<CR>
-nnoremap <F3> a<C-R>=strftime("%Y-%m-%d %a")<CR>
-inoremap <F3> <C-R>=strftime("%Y-%m-%d %a")<CR>
+" nnoremap <F4> a<C-R>=strftime("%m/%d/%y")<CR><ESC>
+" inoremap <F4> <C-R>=strftime("%m/%d/%y")<CR>
+" nnoremap <F3> a<C-R>=strftime("%Y-%m-%d %a")<CR>
+" inoremap <F3> <C-R>=strftime("%Y-%m-%d %a")<CR>
+
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+nnoremap <F4> :CtrlPBuffer<CR>
+nnoremap <F2> :CtrlPDir<CR>
+let g:ctrlp_custom_ignore = {
+            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+            \ 'file': '\v\.(exe|so|dll)$'
+            \ }
+
+" map <leader>f :CtrlP<cr>
+map <leader>b :CtrlPMRU<cr>
+nnoremap <C-M-r> :CtrlPBufTagAll<cr>
+
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 1
+endif
+" bind K to grep word under cursor
+
+nnoremap K :Ag! "\bdef\s<C-R><C-W>\b"<CR>:cw<CR>
+nnoremap M :Ag! "\b<C-R><C-W>\b"<CR>:cw<CR>
+let g:ctrlp_extensions = ['tag', 'buffertag']
+map <leader>ct :silent! !ctags -R . &<CR>
+" }}}
+
 
 " ------------------------------- Plugins --------------------------------
 " ------------------------------------------------------------------------
@@ -396,3 +440,13 @@ else
     " Extra helper functions
     source ~/.vim/functions.vim
 endif
+map <silent> <C-F11>
+\    :call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")<CR>
+
+"------------------------------- Customs --------------------------------
+nnoremap <C-S-Down> :m .+1<CR>==
+nnoremap <C-S-Up> :m .-2<CR>==
+inoremap <C-S-Down> <Esc>:m .+1<CR>==gi
+inoremap <C-S-Up> <Esc>:m .-2<CR>==gi
+vnoremap <C-S-Down> :m '>+1<CR>gv=gv
+vnoremap <C-S-Up> :m '<-2<CR>gv=gv
