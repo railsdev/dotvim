@@ -22,6 +22,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 " Original repos
 NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'crusoexia/vim-monokai'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'digitaltoad/vim-jade'
 NeoBundle 'editorconfig/editorconfig-vim'
@@ -57,11 +58,14 @@ NeoBundle 'vim-scripts/matchit.zip'
 NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'vim-scripts/vcscommand.vim'
 NeoBundle 'tpope/vim-endwise'
+NeoBundle 'Valloric/YouCompleteMe'
 
 " Original mirrors
 NeoBundle 'voithos/vim-multiselect'
 NeoBundle 'voithos/vim-python-matchit'
 NeoBundle 'voithos/vim-python-syntax'
+NeoBundle 'godlygeek/tabular'
+NeoBundle 'plasticboy/vim-markdown'
 
 " Forks
 NeoBundle 'voithos/vim-colorpack'
@@ -174,19 +178,26 @@ if has("gui_running")
     set guioptions-=T
 
     " Set theme options
+    syntax enable
+    " let g:solarized_contrast = "high"
+    " let g:solarized_visibility = "low"
+    " colorscheme distinguished
+    colorscheme Tomorrow-Night
 
-    colorscheme distinguished  
     set background=dark
 
     set guioptions-=m  "remove menu bar
     set guioptions-=T  "remove toolbar
     set guioptions-=r  "remove right-hand scroll bar
+    set guioptions-=L  "remove right-hand scroll bar
     " Set font
     if has("win32")
         set guifont=Consolas:h10:b:cANSI
     else
-        set guifont=Source\ Code\ Pro\ For\ Powerline\ 11
-        " set guifont=Ubuntu\ Mono\ 12
+        set guifont=Source\ Code\ Pro\ For\ Powerline\ 10.5
+        " set guifont=Monaco\ for\ Powerline\ 10
+        " set guifont=Ubuntu\ Mono\ derivative\ Powerline\ 12 
+
     endif
 else
     " Enable more colors for the terminal
@@ -248,6 +259,7 @@ set smartcase
 " Match searches immediately, and highlight subsequent matches
 set incsearch
 set hlsearch
+set linespace=2
 
 " ------------------------------ Mappings --------------------------------
 " ------------------------------------------------------------------------
@@ -382,6 +394,7 @@ let NERDTreeIgnore = ['\.pyc$']
 " Airline
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme = "tomorrow"
 
 " Syntastic
 let g:syntastic_mode_map = { 'mode': 'passive',
@@ -450,3 +463,12 @@ inoremap <C-S-Down> <Esc>:m .+1<CR>==gi
 inoremap <C-S-Up> <Esc>:m .-2<CR>==gi
 vnoremap <C-S-Down> :m '>+1<CR>gv=gv
 vnoremap <C-S-Up> :m '<-2<CR>gv=gv
+
+"-------------------------- Bindings for VCSCommand  --------------------
+nmap <Leader>va <Plug>VCSAdd
+nmap <Leader>va <Plug>VCSAdd
+nmap <Leader>vc <Plug>VCSCommit
+nmap <Leader>vd <Plug>VCSDiff
+nmap <Leader>vs <Plug>VCSStatus
+nmap <Leader>vu <Plug>VCSUpdate
+
