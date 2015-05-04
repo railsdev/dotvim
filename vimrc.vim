@@ -10,11 +10,11 @@
 
 " Setup NeoBundle
 if has("win32")
-    set runtimepath+=~/vimfiles/bundle/neobundle.vim/
-    call neobundle#rc(expand('~/vimfiles/bundle/'))
+  set runtimepath+=~/vimfiles/bundle/neobundle.vim/
+  call neobundle#rc(expand('~/vimfiles/bundle/'))
 else
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
-    call neobundle#rc(expand('~/.vim/bundle/'))
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+  call neobundle#rc(expand('~/.vim/bundle/'))
 endif
 
 " Let NeoBundle manage NeoBundle
@@ -59,23 +59,32 @@ NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'vim-scripts/vcscommand.vim'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'mhinz/vim-signify'
+NeoBundle 'FelikZ/ctrlp-py-matcher'
+NeoBundle 'tpope/vim-bundler'
 
 " Original mirrors
 NeoBundle 'voithos/vim-multiselect'
 NeoBundle 'voithos/vim-python-matchit'
 NeoBundle 'voithos/vim-python-syntax'
 NeoBundle 'godlygeek/tabular'
+NeoBundle 'fatih/vim-go'
 NeoBundle 'plasticboy/vim-markdown'
-
+NeoBundle 'ervandew/supertab'
+NeoBundle 'mjbrownie/browser'
+" NeoBundle 'Yggdroot/indentLine'
 " Forks
 NeoBundle 'voithos/vim-colorpack'
-
+NeoBundle 'joeytwiddle/sexy_scroller.vim'
+NeoBundle 'rodjek/vim-puppet'
+NeoBundle 'derekwyatt/vim-scala'
+NeoBundle 'whatyouhide/vim-gotham'
 " Platform-specific
 if has("win32")
-    NeoBundle 'vim-scripts/aspnetcs'
+  NeoBundle 'vim-scripts/aspnetcs'
 else
-    NeoBundle 'majutsushi/tagbar'
-    NeoBundle 'vim-scripts/AutoTag'
+  NeoBundle 'majutsushi/tagbar'
+  NeoBundle 'vim-scripts/AutoTag'
 endif
 
 " Turn on filetype plugin and indentation handling
@@ -119,11 +128,12 @@ set spellfile=~/.vim/spell/spell.utf-8.add
 set viminfo='10,<100,:20,%
 
 function! ResCur()
-    if line("'\"") < line("$")
-        normal! g'"
-        return 1
-    endif
+  if line("'\"") < line("$")
+    normal! g'"
+    return 1
+  endif
 endfunction
+
 
 autocmd BufReadPost * call ResCur()
 
@@ -174,38 +184,51 @@ set matchtime=3
 " ------------------------------------------------------------------------
 " Set options for GUI vs shell
 if has("gui_running")
-    " Disable the toolbar
-    set guioptions-=T
+  " Disable the toolbar
+  set guioptions-=T
+  set t_Co=256
 
-    " Set theme options
-    syntax enable
-    " let g:solarized_contrast = "high"
-    " let g:solarized_visibility = "low"
-    " colorscheme distinguished
-    colorscheme Tomorrow-Night
+  " Set theme options
+  syntax enable
+  set background=dark
+  " let g:solarized_contrast = "high"
+  " let g:solarized_visibility = "low"
+  " colorscheme distinguished
+  " colorscheme codeschool 
+  colorscheme gotham256 
 
-    set background=dark
+  " set background=dark
 
-    set guioptions-=m  "remove menu bar
-    set guioptions-=T  "remove toolbar
-    set guioptions-=r  "remove right-hand scroll bar
-    set guioptions-=L  "remove right-hand scroll bar
-    " Set font
-    if has("win32")
-        set guifont=Consolas:h10:b:cANSI
-    else
-        set guifont=Source\ Code\ Pro\ For\ Powerline\ 10.5
-        " set guifont=Monaco\ for\ Powerline\ 10
-        " set guifont=Ubuntu\ Mono\ derivative\ Powerline\ 12 
+  set guioptions-=m  "remove menu bar
+  set guioptions-=T  "remove toolbar
+  set guioptions-=r  "remove right-hand scroll bar
+  set guioptions-=L  "remove right-hand scroll bar
+  " Set font
+  if has("win32")
+    set guifont=Consolas:h10:b:cANSI
+  else
+    " set guifont=Source\ Code\ Pro\ For\ Powerline\ Bold\ 12
+    " set guifont=Monaco\ for\ Powerline\ Bold\ 10
+    set guifont=Ubuntu\ Mono\ derivative\ Powerline\ Bold\ 9 
+    set guifont=Monaco\ for\ Powerline\ Bold\ 10
 
-    endif
+  endif
 else
-    " Enable more colors for the terminal
-    set t_Co=256
+  " Enable more colors for the terminal
+  set t_Co=256
+  
+  if &term =~ '256color'
+    " disable Background Color Erase (BCE) so that color schemes
+    " render properly when inside 256-color tmux and GNU screen.
+    " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+    set t_ut=
+  endif
 
-    " Set theme options
-    colorscheme earendel
-    set background=dark
+  " Set theme options
+  set background=dark
+  syntax enable
+  colorscheme gotham256
+
 endif
 
 " Turn on Wild Menu for command completion
@@ -226,7 +249,7 @@ set listchars=eol:¬,tab:»\ ,trail:·
 set list
 
 " Enable an warning when exceeding a certain line length
-set colorcolumn=120
+set colorcolumn=
 
 " Enable line numbers
 set number
@@ -259,7 +282,7 @@ set smartcase
 " Match searches immediately, and highlight subsequent matches
 set incsearch
 set hlsearch
-set linespace=2
+set linespace=3
 
 " ------------------------------ Mappings --------------------------------
 " ------------------------------------------------------------------------
@@ -279,7 +302,9 @@ noremap <silent> <C-L> :silent nohlsearch<CR>
 inoremap <C-BS> <C-W>
 
 " Map CTRL+S to select all
-nnoremap <C-S> ggVG
+nnoremap <C-A> ggVG
+nmap <c-s> :w<CR>
+imap <c-s> <Esc>:w<CR>a
 
 " Map clipboard register paste and copy operations
 nnoremap <C-P> "+gp
@@ -304,38 +329,40 @@ nnoremap <S-CR> O<ESC>0d$
 
 " Helper functions to avoid BufChange'ing the NERD tree window
 function! BufNext()
-    if exists("t:NERDTreeBufName")
-        if bufnr(t:NERDTreeBufName) != bufnr('')
-            bn
-        endif
-    else
-        bn
+  if exists("t:NERDTreeBufName")
+    if bufnr(t:NERDTreeBufName) != bufnr('')
+      bn
     endif
+  else
+    bn
+  endif
 endfunction
 
 function! BufPrev()
-    if exists("t:NERDTreeBufName")
-        if bufnr(t:NERDTreeBufName) != bufnr('')
-            bp
-        endif
-    else
-        bp
+  if exists("t:NERDTreeBufName")
+    if bufnr(t:NERDTreeBufName) != bufnr('')
+      bp
     endif
+  else
+    bp
+  endif
 endfunction
 
 function! BufWipe()
-    if exists("t:NERDTreeBufName")
-        if bufnr(t:NERDTreeBufName) != bufnr('')
-            BW
-        endif
-    else
-        BW
+  if exists("t:NERDTreeBufName")
+    if bufnr(t:NERDTreeBufName) != bufnr('')
+      BW
     endif
+  else
+    BW
+  endif
 endfunction
 
 " Map buffer navigation easier
 nnoremap <silent> <M-Right> :call BufNext()<cr>
 nnoremap <silent> <M-Left> :call BufPrev()<cr>
+nnoremap <silent> <M-l> :call BufNext()<cr>
+nnoremap <silent> <M-h> :call BufPrev()<cr>
 
 
 " Map easier shortcuts to common plugins
@@ -343,6 +370,7 @@ nnoremap <silent> <leader>t :NERDTreeToggle<CR>
 nnoremap <silent> <leader>q :call BufWipe()<CR> " Close buffer without closing window
 nnoremap <silent> <leader>gu :GundoToggle<CR>
 nnoremap <silent> <leader>e :TagbarToggle<CR>
+nnoremap <silent> <leader>vt :SignifyToggle<CR>
 
 " Map timestamp functions
 " nnoremap <F4> a<C-R>=strftime("%m/%d/%y")<CR><ESC>
@@ -355,9 +383,9 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
 nnoremap <F4> :CtrlPBuffer<CR>
 nnoremap <F2> :CtrlPDir<CR>
 let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-            \ 'file': '\v\.(exe|so|dll)$'
-            \ }
+      \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+      \ 'file': '\v\.(exe|so|dll)$'
+      \ }
 
 " map <leader>f :CtrlP<cr>
 map <leader>b :CtrlPMRU<cr>
@@ -369,17 +397,19 @@ if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g "" --ignore archive'
 
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 1
+  let g:airline#extensions#tabline#enabled = 1
 endif
 " bind K to grep word under cursor
 
 nnoremap K :Ag! "\bdef\s<C-R><C-W>\b"<CR>:cw<CR>
 nnoremap M :Ag! "\b<C-R><C-W>\b"<CR>:cw<CR>
 let g:ctrlp_extensions = ['tag', 'buffertag']
-map <leader>ct :silent! !ctags -R . &<CR>
+nmap <Leader>ct <Plug>silent! !ctags -R . &
+
 " }}}
 
 
@@ -394,67 +424,71 @@ let NERDTreeIgnore = ['\.pyc$']
 " Airline
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme = "tomorrow"
+let g:airline_theme = "gotham256"
 
 " Syntastic
 let g:syntastic_mode_map = { 'mode': 'passive',
-                           \ 'active_filetypes': [],
-                           \ 'passive_filetypes': [] }
+      \ 'active_filetypes': [],
+      \ 'passive_filetypes': [] }
 
 " UltiSnips
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
+let g:ycm_key_list_select_completion = ['<C-TAB>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-S-TAB>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-Tab>'
+
 " CtrlP
-let g:ctrlp_map = '<leader>f'
+let g:ctrlp_map = '<M-?>'
 " let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 " ------------------------ Environment-Specific --------------------------
 " ------------------------------------------------------------------------
 if has("win32")
-    " Try DOS EOL first
-    set fileformats=dos,unix,mac
+  " Try DOS EOL first
+  set fileformats=dos,unix,mac
 
-    " Fix shell options
-    set shell=cmd.exe
-    set shellcmdflag=/C
+  " Fix shell options
+  set shell=cmd.exe
+  set shellcmdflag=/C
 
-    " Specify swap directory
-    set directory=~/vimfiles/tmp//,$TMP
+  " Specify swap directory
+  set directory=~/vimfiles/tmp//,$TMP
 
-    " Specify backup directory
-    set backupdir=~/vimfiles/backup//,$TMP
+  " Specify backup directory
+  set backupdir=~/vimfiles/backup//,$TMP
 
-    " Specify undo directory
-    set undodir=~/vimfiles/undo
+  " Specify undo directory
+  set undodir=~/vimfiles/undo
 
-    " Specify spelling file
-    set spellfile=~/vimfiles/spell/spell.utf-8.add
+  " Specify spelling file
+  set spellfile=~/vimfiles/spell/spell.utf-8.add
 
-    " Switch to tabs
-    set noexpandtab
+  " Switch to tabs
+  set noexpandtab
 
-    " No powerline fonts
-    let g:airline_powerline_fonts = 0
+  " No powerline fonts
+  let g:airline_powerline_fonts = 0
 endif
 
 " ------------------------------ Includes --------------------------------
 " ------------------------------------------------------------------------
 
 if has("win32")
-    " Add extra filetypes
-    source ~/vimfiles/filetypes.vim
-    " Extra helper functions
-    source ~/vimfiles/functions.vim
+  " Add extra filetypes
+  source ~/vimfiles/filetypes.vim
+  " Extra helper functions
+  source ~/vimfiles/functions.vim
 else
-    " Add extra filetypes
-    source ~/.vim/filetypes.vim
-    " Extra helper functions
-    source ~/.vim/functions.vim
+  " Add extra filetypes
+  source ~/.vim/filetypes.vim
+  " Extra helper functions
+  source ~/.vim/functions.vim
 endif
 map <silent> <C-F11>
-\    :call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")<CR>
+      \    :call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")<CR>
 
 "------------------------------- Customs --------------------------------
 nnoremap <C-S-Down> :m .+1<CR>==
@@ -471,4 +505,28 @@ nmap <Leader>vc <Plug>VCSCommit
 nmap <Leader>vd <Plug>VCSDiff
 nmap <Leader>vs <Plug>VCSStatus
 nmap <Leader>vu <Plug>VCSUpdate
+let g:signify_mapping_next_hunk = '<leader>gj' 
+let g:signify_mapping_prev_hunk = '<leader>gk' 
 
+" Use relative numbering in insert mode
+set number
+set relativenumber
+:hi CursorLineNr guifg=#566978
+" autocmd InsertLeave * set number
+"
+" Settings for Go-Lang
+"
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+" let g:indentLine_char = '│'
+command Wd write|bdelete
+
+
+let mapleader=','
+if exists(":Tabularize")
+  nmap <Leader>a= :Tabularize /=<CR>
+  vmap <Leader>a= :Tabularize /=<CR>
+  nmap <Leader>a: :Tabularize /:\zs<CR>
+  vmap <Leader>a: :Tabularize /:\zs<CR>
+endif
