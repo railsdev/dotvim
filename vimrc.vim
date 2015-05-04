@@ -79,6 +79,8 @@ NeoBundle 'joeytwiddle/sexy_scroller.vim'
 NeoBundle 'rodjek/vim-puppet'
 NeoBundle 'derekwyatt/vim-scala'
 NeoBundle 'whatyouhide/vim-gotham'
+NeoBundle 'junegunn/vim-easy-align'
+
 " Platform-specific
 if has("win32")
   NeoBundle 'vim-scripts/aspnetcs'
@@ -521,12 +523,8 @@ let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 " let g:indentLine_char = '│'
 command Wd write|bdelete
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
 
-
-let mapleader=','
-if exists(":Tabularize")
-  nmap <Leader>a= :Tabularize /=<CR>
-  vmap <Leader>a= :Tabularize /=<CR>
-  nmap <Leader>a: :Tabularize /:\zs<CR>
-  vmap <Leader>a: :Tabularize /:\zs<CR>
-endif
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
