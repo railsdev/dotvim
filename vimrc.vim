@@ -23,18 +23,13 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Original repos
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'crusoexia/vim-monokai'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'digitaltoad/vim-jade'
 NeoBundle 'editorconfig/editorconfig-vim'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'honza/vim-snippets'
-NeoBundle 'hynek/vim-python-pep8-indent'
 NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
-NeoBundle 'nacitar/a.vim'
 NeoBundle 'othree/html5.vim'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'rking/ag.vim'
@@ -44,14 +39,10 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle 'SirVer/ultisnips'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'tikhomirov/vim-glsl'
-NeoBundle 'tpope/vim-ragtag'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'tomtom/tlib_vim'
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'vim-scripts/bufkill.vim'
-NeoBundle 'vim-scripts/cool.vim'
 NeoBundle 'vim-scripts/genutils'
 NeoBundle 'vim-scripts/ini-syntax-definition'
 NeoBundle 'vim-scripts/matchit.zip'
@@ -60,13 +51,11 @@ NeoBundle 'vim-scripts/vcscommand.vim'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'mhinz/vim-signify'
-NeoBundle 'FelikZ/ctrlp-py-matcher'
 NeoBundle 'tpope/vim-bundler'
+NeoBundle 'kchmck/vim-coffee-script'
 
 " Original mirrors
 NeoBundle 'voithos/vim-multiselect'
-NeoBundle 'voithos/vim-python-matchit'
-NeoBundle 'voithos/vim-python-syntax'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'fatih/vim-go'
 NeoBundle 'plasticboy/vim-markdown'
@@ -75,12 +64,18 @@ NeoBundle 'mjbrownie/browser'
 " NeoBundle 'Yggdroot/indentLine'
 " Forks
 NeoBundle 'voithos/vim-colorpack'
-NeoBundle 'joeytwiddle/sexy_scroller.vim'
 NeoBundle 'rodjek/vim-puppet'
-NeoBundle 'derekwyatt/vim-scala'
 NeoBundle 'whatyouhide/vim-gotham'
 NeoBundle 'junegunn/vim-easy-align'
+NeoBundle 'xolox/vim-misc'
+NeoBundle 'lambdalisue/vim-fullscreen'
 
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+Plug 'junegunn/fzf.vim'
+Plug 'thoughtbot/vim-rspec'
+Plug 'tpope/vim-dispatch'
+call plug#end()
 " Platform-specific
 if has("win32")
   NeoBundle 'vim-scripts/aspnetcs'
@@ -192,12 +187,16 @@ if has("gui_running")
 
   " Set theme options
   syntax enable
-  set background=dark
+  set background=light
   " let g:solarized_contrast = "high"
   " let g:solarized_visibility = "low"
   " colorscheme distinguished
   " colorscheme codeschool 
-  colorscheme gotham256 
+  " colorscheme gotham256 
+  " colorscheme Tomorrow-Night-Eighties
+
+  colorscheme Tomorrow-Night 
+  " colorscheme nu-colors 
 
   " set background=dark
 
@@ -209,10 +208,12 @@ if has("gui_running")
   if has("win32")
     set guifont=Consolas:h10:b:cANSI
   else
-    " set guifont=Source\ Code\ Pro\ For\ Powerline\ Bold\ 12
+    " set guifont=Source\ Code\ Pro\ For\ Powerline\ Bold\ 10 
     " set guifont=Monaco\ for\ Powerline\ Bold\ 10
-    set guifont=Ubuntu\ Mono\ derivative\ Powerline\ Bold\ 9 
-    set guifont=Monaco\ for\ Powerline\ Bold\ 10
+    " set guifont=Ubuntu\ Mono\ derivative\ Powerline\ Bold\ 12 
+    set guifont=Menlo\ for\ Powerline\ Bold\ 13 
+    " set guifont=Droid\ Sans\ \Mono derivative\ Powerline\ 11 
+    " set guifont=Monaco\ for\ Powerline\ Bold\ 10
 
   endif
 else
@@ -229,7 +230,7 @@ else
   " Set theme options
   set background=dark
   syntax enable
-  colorscheme gotham256
+  colorscheme monokai 
 
 endif
 
@@ -263,7 +264,7 @@ set ruler
 set cmdheight=2
 
 " Enable status line for all files
-set laststatus=2
+set laststatus=1
 
 " Set the status line to show useful information
 set statusline=\ %F%m%r%h\ %w\ \ [%{&ff}]%y\ Line:\ %l/%L:%c\ (%p%%)
@@ -284,7 +285,7 @@ set smartcase
 " Match searches immediately, and highlight subsequent matches
 set incsearch
 set hlsearch
-set linespace=3
+set linespace=4
 
 " ------------------------------ Mappings --------------------------------
 " ------------------------------------------------------------------------
@@ -363,9 +364,11 @@ endfunction
 " Map buffer navigation easier
 nnoremap <silent> <M-Right> :call BufNext()<cr>
 nnoremap <silent> <M-Left> :call BufPrev()<cr>
-nnoremap <silent> <M-l> :call BufNext()<cr>
-nnoremap <silent> <M-h> :call BufPrev()<cr>
 
+" Map buffer navigation easier
+nnoremap <silent> <S-M-Right> :tabnext<cr>
+nnoremap <silent> <S-M-Left> :tabprevious<cr>
+nnoremap <silent> <C-M-n> :tabnew<cr>
 
 " Map easier shortcuts to common plugins
 nnoremap <silent> <leader>t :NERDTreeToggle<CR>
@@ -382,34 +385,18 @@ nnoremap <silent> <leader>vt :SignifyToggle<CR>
 
 
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
-nnoremap <F4> :CtrlPBuffer<CR>
-nnoremap <F2> :CtrlPDir<CR>
-let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-      \ 'file': '\v\.(exe|so|dll)$'
-      \ }
 
-" map <leader>f :CtrlP<cr>
-map <leader>b :CtrlPMRU<cr>
-nnoremap <C-M-r> :CtrlPBufTagAll<cr>
 
 " The Silver Searcher
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
 
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g "" --ignore archive'
-
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 1
-  let g:airline#extensions#tabline#enabled = 1
 endif
 " bind K to grep word under cursor
 
 nnoremap K :Ag! "\bdef\s<C-R><C-W>\b"<CR>:cw<CR>
 nnoremap M :Ag! "\b<C-R><C-W>\b"<CR>:cw<CR>
-let g:ctrlp_extensions = ['tag', 'buffertag']
 nmap <Leader>ct <Plug>silent! !ctags -R . &
 
 " }}}
@@ -424,9 +411,20 @@ let NERDSpaceDelims=1
 let NERDTreeIgnore = ['\.pyc$']
 
 " Airline
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme = "gotham256"
+" let g:airline_powerline_fonts = 1
+" let g:airline#extensions#tabline#enabled = 0
+" let g:airline_theme = "tomorrow"
+" let g:airline_theme = "molokai"
+" let g:airline_theme            = "powerlineish"
+" let g:airline_enable_branch    = 0
+" let g:airline_enable_syntastic = 1
+" " function! AirlineInit()
+" let g:airline_section_y = airline#section#create(['ffenc', ' ⮃ %{strftime("%H:%M")}'])
+" " endfunction
+
+" let g:airline_right_alt_sep     = '⮃'
+" " autocmd VimEnter * call AirlineInit()
+
 
 " Syntastic
 let g:syntastic_mode_map = { 'mode': 'passive',
@@ -442,9 +440,6 @@ let g:ycm_key_list_select_completion = ['<C-TAB>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-S-TAB>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-Tab>'
 
-" CtrlP
-let g:ctrlp_map = '<M-?>'
-" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 " ------------------------ Environment-Specific --------------------------
 " ------------------------------------------------------------------------
@@ -472,7 +467,7 @@ if has("win32")
   set noexpandtab
 
   " No powerline fonts
-  let g:airline_powerline_fonts = 0
+  " let g:airline_powerline_fonts = 1
 endif
 
 " ------------------------------ Includes --------------------------------
@@ -522,9 +517,87 @@ let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 " let g:indentLine_char = '│'
-command Wd write|bdelete
+command! Wd write|bdelete
 " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
 vmap <Enter> <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
+" highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+" match OverLength /\%81v.\+/
+nnoremap o <NOP> 
+let NERDTreeQuitOnOpen = 1
+
+
+" fzf settings
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Default fzf layout
+let g:fzf_layout = { 'down': '40%' }
+
+" Advanced customization using autoload functions
+autocmd VimEnter * command! Colors
+  \ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'})
+
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Open files in horizontal split
+nnoremap <silent> <c-?> :call fzf#run({
+\   'down': '40%',
+\   'sink': 'botright split' })<CR>
+
+
+
+
+" List of buffers
+function! BufList()
+  redir => ls
+  silent ls
+  redir END
+  return split(ls, '\n')
+endfunction
+
+function! BufOpen(e)
+  execute 'buffer '. matchstr(a:e, '^[ 0-9]*')
+endfunction
+
+nnoremap <silent> <NUL> :call fzf#run({
+\   'source':  reverse(BufList()),
+\   'sink':    function('BufOpen'),
+\   'options': '+m',
+\   'down':    '40%'
+\ })<CR>
+
+" Advanced customization using autoload functions
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
+" Replace the default dictionary completion with fzf-based fuzzy completion
+inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
+
+function! s:make_sentence(lines)
+  return substitute(join(a:lines), '^.', '\=toupper(submatch(0))', '').'.'
+endfunction
+let g:fzf_action = {
+  \ 'ctrl-m': 'e',
+  \ 'alt-j':  'botright split',
+  \ 'alt-k':  'topleft split',
+  \ 'alt-h':  'vertical topleft split',
+  \ 'alt-l':  'vertical botright split' }
+
+inoremap <expr> <c-x><c-s> fzf#complete({
+  \ 'source':  'cat /usr/share/dict/words',
+  \ 'reducer': function('<sid>make_sentence'),
+  \ 'options': '--multi --reverse --margin 15%,0',
+  \ 'left':    20})
+
+nnoremap <C-t> :call RunCurrentSpecFile()<CR>
+
+let g:rspec_command = "compiler rspec | set makeprg=zeus | Make rspec {spec}"
