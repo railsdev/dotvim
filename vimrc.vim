@@ -23,10 +23,15 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Original repos
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'crusoexia/vim-monokai'
+NeoBundle 'bling/vim-airline'
+NeoBundle 'cespare/vim-toml'
+NeoBundle 'digitaltoad/vim-jade'
 NeoBundle 'editorconfig/editorconfig-vim'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'jelera/vim-javascript-syntax'
+NeoBundle 'JuliaLang/julia-vim'
+NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -53,6 +58,7 @@ NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'mhinz/vim-signify'
 NeoBundle 'tpope/vim-bundler'
 NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'wting/rust.vim'
 
 " Original mirrors
 NeoBundle 'voithos/vim-multiselect'
@@ -216,6 +222,19 @@ if has("gui_running")
     " set guifont=Monaco\ for\ Powerline\ Bold\ 10
 
   endif
+    " Disable the toolbar
+    set guioptions-=T
+
+    " Set theme options
+    colorscheme gotham
+    set background=dark
+
+    " Set font
+    if has("win32")
+        set guifont=Consolas:h10:b:cANSI
+    else
+        set guifont=Source\ Code\ Pro\ For\ Powerline\ 10
+    endif
 else
   " Enable more colors for the terminal
   set t_Co=256
@@ -376,6 +395,7 @@ nnoremap <silent> <leader>q :call BufWipe()<CR> " Close buffer without closing w
 nnoremap <silent> <leader>gu :GundoToggle<CR>
 nnoremap <silent> <leader>e :TagbarToggle<CR>
 nnoremap <silent> <leader>vt :SignifyToggle<CR>
+nnoremap <silent> <leader>a :Ag ''<LEFT>
 
 " Map timestamp functions
 " nnoremap <F4> a<C-R>=strftime("%m/%d/%y")<CR><ESC>
@@ -405,7 +425,7 @@ nmap <Leader>ct <Plug>silent! !ctags -R . &
 " ------------------------------- Plugins --------------------------------
 " ------------------------------------------------------------------------
 " NERDCommenter
-let NERDSpaceDelims=1
+let NERDSpaceDelims = 1
 
 " NERDTree
 let NERDTreeIgnore = ['\.pyc$']
@@ -432,14 +452,17 @@ let g:syntastic_mode_map = { 'mode': 'passive',
       \ 'passive_filetypes': [] }
 
 " UltiSnips
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<c-b>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-z>"
 
 let g:ycm_key_list_select_completion = ['<C-TAB>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-S-TAB>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-Tab>'
 
+
+" Emmet
+let g:user_emmet_leader_key = '<C-Z>'
 
 " ------------------------ Environment-Specific --------------------------
 " ------------------------------------------------------------------------
