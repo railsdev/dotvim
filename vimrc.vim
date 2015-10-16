@@ -517,8 +517,8 @@ inoremap <C-S-Down> <Esc>:m .+1<CR>==gi
 inoremap <C-S-Up> <Esc>:m .-2<CR>==gi
 vnoremap <C-S-Down> :m '>+1<CR>gv=gv
 vnoremap <C-S-Up> :m '<-2<CR>gv=gv
-
 "-------------------------- Bindings for VCSCommand  --------------------
+
 nmap <Leader>va <Plug>VCSAdd
 nmap <Leader>va <Plug>VCSAdd
 nmap <Leader>vc <Plug>VCSCommit
@@ -624,3 +624,10 @@ inoremap <expr> <c-x><c-s> fzf#complete({
 nnoremap <C-t> :call RunCurrentSpecFile()<CR>
 
 let g:rspec_command = "compiler rspec | set makeprg=zeus | Make rspec {spec}"
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+set splitbelow
+set splitright
