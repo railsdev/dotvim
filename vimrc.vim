@@ -31,7 +31,6 @@ NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'JuliaLang/julia-vim'
-NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -54,7 +53,6 @@ NeoBundle 'vim-scripts/matchit.zip'
 NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'vim-scripts/vcscommand.vim'
 NeoBundle 'tpope/vim-endwise'
-NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'mhinz/vim-signify'
 NeoBundle 'tpope/vim-bundler'
 NeoBundle 'kchmck/vim-coffee-script'
@@ -251,6 +249,7 @@ else
   syntax enable
   colorscheme monokai 
 
+
 endif
 
 " Turn on Wild Menu for command completion
@@ -280,10 +279,10 @@ set number
 set ruler
 
 " Increase height of Vim command prompt
-set cmdheight=2
+set cmdheight=1
 
 " Enable status line for all files
-set laststatus=1
+set laststatus=2
 
 " Set the status line to show useful information
 set statusline=\ %F%m%r%h\ %w\ \ [%{&ff}]%y\ Line:\ %l/%L:%c\ (%p%%)
@@ -384,16 +383,12 @@ endfunction
 nnoremap <silent> <M-Right> :call BufNext()<cr>
 nnoremap <silent> <M-Left> :call BufPrev()<cr>
 
-" Map buffer navigation easier
-nnoremap <silent> <S-M-Right> :tabnext<cr>
-nnoremap <silent> <S-M-Left> :tabprevious<cr>
-nnoremap <silent> <C-M-n> :tabnew<cr>
 
 " Map easier shortcuts to common plugins
 nnoremap <silent> <leader>t :NERDTreeToggle<CR>
 nnoremap <silent> <leader>q :call BufWipe()<CR> " Close buffer without closing window
 nnoremap <silent> <leader>gu :GundoToggle<CR>
-nnoremap <silent> <leader>e :TagbarToggle<CR>
+nnoremap <silent> T :BTags!<CR>
 nnoremap <silent> <leader>vt :SignifyToggle<CR>
 nnoremap <silent> <leader>a :Ag ''<LEFT>
 
@@ -431,19 +426,19 @@ let NERDSpaceDelims = 1
 let NERDTreeIgnore = ['\.pyc$']
 
 " Airline
-" let g:airline_powerline_fonts = 1
-" let g:airline#extensions#tabline#enabled = 0
-" let g:airline_theme = "tomorrow"
-" let g:airline_theme = "molokai"
-" let g:airline_theme            = "powerlineish"
-" let g:airline_enable_branch    = 0
-" let g:airline_enable_syntastic = 1
-" " function! AirlineInit()
-" let g:airline_section_y = airline#section#create(['ffenc', ' ⮃ %{strftime("%H:%M")}'])
-" " endfunction
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 0
+let g:airline_theme = "tomorrow"
+let g:airline_theme = "molokai"
+let g:airline_theme            = "powerlineish"
+let g:airline_enable_branch    = 0
+let g:airline_enable_syntastic = 1
+function! AirlineInit()
+  let g:airline_section_y = airline#section#create(['ffenc', ' ⮃ %{strftime("%H:%M")}'])
+endfunction
 
-" let g:airline_right_alt_sep     = '⮃'
-" " autocmd VimEnter * call AirlineInit()
+let g:airline_right_alt_sep     = '⮃'
+autocmd VimEnter * call AirlineInit()
 
 
 " Syntastic
@@ -511,12 +506,6 @@ map <silent> <C-F11>
       \    :call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")<CR>
 
 "------------------------------- Customs --------------------------------
-nnoremap <C-S-Down> :m .+1<CR>==
-nnoremap <C-S-Up> :m .-2<CR>==
-inoremap <C-S-Down> <Esc>:m .+1<CR>==gi
-inoremap <C-S-Up> <Esc>:m .-2<CR>==gi
-vnoremap <C-S-Down> :m '>+1<CR>gv=gv
-vnoremap <C-S-Up> :m '<-2<CR>gv=gv
 "-------------------------- Bindings for VCSCommand  --------------------
 
 nmap <Leader>va <Plug>VCSAdd
@@ -573,11 +562,9 @@ xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
 " Open files in horizontal split
-nnoremap <silent> <c-?> :call fzf#run({
+nnoremap <silent> <c-p> :call fzf#run({
 \   'down': '40%',
 \   'sink': 'botright split' })<CR>
-
-
 
 
 " List of buffers
@@ -629,5 +616,28 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+nnoremap <C-Down> <C-W><C-J>
+nnoremap <C-Up> <C-W><C-K>
+nnoremap <C-S-Right> <C-W><C-L>
+nnoremap <C-S-Left> <C-W><C-H>
+
 set splitbelow
 set splitright
+
+
+nnoremap <silent> <Leader>C :call fzf#run({
+      \   'source':
+      \     map(split(globpath(&rtp, "colors/*.vim"), "\n"),
+      \         "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')"),
+      \   'sink':    'colo',
+      \   'options': '+m',
+      \   'left':    30
+      \ })<CR>
+
+nnoremap <C-S-Down> :m .+1<CR>==
+nnoremap <C-S-Up> :m .-2<CR>==
+inoremap <C-S-Down> <Esc>:m .+1<CR>==gi
+inoremap <C-S-Up> <Esc>:m .-2<CR>==gi
+vnoremap <C-S-Down> :m '>+1<CR>gv=gv
+vnoremap <C-S-Up> :m '<-2<CR>gv=gv
